@@ -6,7 +6,7 @@ import FormInput from "../form-input/FormInput";
 import CustomButton from "../custom-buttom/CustomButton";
 import "./signin.scss";
 //use of firebase:
-import { signInWithGoogle } from "../../firebase/firebase.utils";
+import { auth, signInWithGoogle } from "../../firebase/firebase.utils";
 
 //stateful due to acquring user input
 class SignIn extends React.Component {
@@ -19,8 +19,16 @@ class SignIn extends React.Component {
     };
   }
   //submit on form - just as a preventative for misfire of event for now:
-  handleSubmit = event => {
-    this.setState({ email: "", password: "" });
+  handleSubmit = async event => {
+    event.preventDefault();
+    const { email, password } = this.state;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      this.setState({ email: "", password: "" });
+    } catch (error) {
+      console.log(error);
+    }
   };
   //for the event of input for email and password field:
   handleChange = event => {
