@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-
+import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import Header from "./components/header/Header";
 import Homepage from "./components/pages/homepage/Homepage";
@@ -8,44 +8,31 @@ import Shop from "./components/pages/shop/Shop";
 import SignInSignOut from "./components/pages/sign-in-sign-out/SignInSignOut";
 //import Firebase Auth:
 import { auth, createdUserProfileDocument } from "./firebase/firebase.utils";
+//setting currentUser via redux:
+import { setCurrentUser } from "./redux/user/userActions";
 
 class App extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      currentUser: null
-    };
-  }
-
-  //preventing memory leaks:
   unsubscribeFromAuth = null;
 
-  //to fire firebase authentication:
   componentDidMount() {
-    auth.onAuthStateChanged(async userAuth => {
-      //if user auth exist:
+    const { setCurrentUser } = this.props;
+
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
-        //obtaining userRef object form the utils/data checking if database updated:
         const userRef = await createdUserProfileDocument(userAuth);
 
         userRef.onSnapshot(snapShot => {
-          //display new user or user already stored in database via DocumentSnapshot
-          //example to obtain properties/data of user:
-          this.setState({
-            currentUser: {
-              id: snapShot.id,
-              ...snapShot.data()
-            }
+          setCurrentUser({
+            id: snapShot.id,
+            ...snapShot.data()
           });
         });
       }
-      //for the return of user being null if users signs out
-      this.setState({ currentUser: userAuth });
+
+      setCurrentUser(userAuth);
     });
   }
 
-  //for halting memory leaks:
   componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
@@ -53,16 +40,22 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        {/*Display user current logged in/out status via header*/}
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path="/" component={Homepage} />
-          <Route exact path="/shop" component={Shop} />
-          <Route exact path="/signin" component={SignInSignOut} />
+          <Route path="/shop" component={Shop} />
+          <Route path="/signin" component={SignInSignOut} />
         </Switch>
       </div>
     );
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);
