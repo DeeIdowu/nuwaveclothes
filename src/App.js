@@ -32,16 +32,12 @@ class App extends React.Component {
         userRef.onSnapshot(snapShot => {
           //display new user or user already stored in database via DocumentSnapshot
           //example to obtain properties/data of user:
-          this.setState(
-            {
-              currentUser: {
-                id: snapShot.id,
-                ...snapShot.data()
-              }
-              //for confirmation the above function is working:
-            },
-            () => console.log(this.state)
-          );
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
         });
       }
       //for the return of user being null if users signs out
