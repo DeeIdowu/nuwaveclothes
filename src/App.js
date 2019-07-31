@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { connect } from "react-redux";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Header from "./components/header/Header";
 import Homepage from "./components/pages/homepage/Homepage";
 import Shop from "./components/pages/shop/Shop";
@@ -44,18 +44,30 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={Homepage} />
           <Route path="/shop" component={Shop} />
-          <Route path="/signin" component={SignInSignOut} />
+          <Route
+            exact
+            path="/signin"
+            render={() =>
+              this.props.currentUser ? <Redirect to="/" /> : <SignInSignOut />
+            }
+          />
         </Switch>
       </div>
     );
   }
 }
 
+//to disable access to login page:
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
+
+//for user of navigating and setting current user in homepage/login
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App);
