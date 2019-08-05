@@ -9,7 +9,7 @@ import { ReactComponent as Logo } from "../../assets/crown.svg"; //designated fo
 
 import "./header.scss";
 
-const Header = ({ currentUser }) => (
+const Header = ({ currentUser, hidden }) => (
   <div className="header">
     <Link className="logo-container" to="/">
       <Logo className="logo" />
@@ -32,16 +32,16 @@ const Header = ({ currentUser }) => (
       )}
       <CartIcon />
     </div>
-    <CartDropDown />
+    {hidden ? null : <CartDropDown />}
   </div>
 );
 
-//passing args for connect, to access the state/root-reducer
-//how to get value from root-reducer, state is the root reducer
-const mapStatetoProps = state => ({
+//this is destructured to obtain values deriving from their reducers
+const mapStatetoProps = ({ user: { currentUser }, cart: { hidden } }) => ({
   //obtain user value from currentUser and root reducer
   //by doing so you can remove current user state from component in App.js
-  currentUser: state.user.currentUser
+  currentUser,
+  hidden
 });
 
 export default connect(mapStatetoProps)(Header);
