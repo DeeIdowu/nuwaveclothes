@@ -1,7 +1,8 @@
 import CartActionTypes from "./CartTypes";
 
 const INITIAL_STATE = {
-  hidden: true // to hide the cart upon entering webpage
+  hidden: true, // to hide the cart upon entering webpage
+  cartItems: []
 };
 
 //for changes:
@@ -12,8 +13,14 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         ...state,
         hidden: !state.hidden //if true return false, if false return true
       };
+
+    case CartActionTypes.ADD_ITEM:
+      return {
+        ...state,
+        cartItems: [...state.cartItems, action.payload]
+      };
     default:
-      return state; //using toggle for hidden or unhidden state via true or false
+      return state;
   }
 };
 
