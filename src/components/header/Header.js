@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectCartHidden } from "../../redux/cart/CartSelector";
+import { selectCurrentUser } from "../../redux/user/UserSelector";
+
 import { auth } from "../../firebase/firebase.utils";
 import CartIcon from "../cart-icon/CartIcon";
 import CartDropDown from "../cart-dropdown/CartDropDown";
@@ -37,11 +41,11 @@ const Header = ({ currentUser, hidden }) => (
 );
 
 //this is destructured to obtain values deriving from their reducers
-const mapStatetoProps = ({ user: { currentUser }, cart: { hidden } }) => ({
+const mapStatetoProps = createStructuredSelector({
   //obtain user value from currentUser and root reducer
   //by doing so you can remove current user state from component in App.js
-  currentUser,
-  hidden
+  currentUser: selectCurrentUser,
+  hidden: selectCartHidden
 });
 
 export default connect(mapStatetoProps)(Header);

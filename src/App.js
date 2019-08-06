@@ -3,13 +3,17 @@ import "./App.css";
 import { connect } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Header from "./components/header/Header";
+//pages
 import Homepage from "./components/pages/homepage/Homepage";
 import Shop from "./components/pages/shop/Shop";
 import SignInSignOut from "./components/pages/sign-in-sign-out/SignInSignOut";
+import Checkout from "./components/pages/checkout/Checkout";
 //import Firebase Auth:
 import { auth, createdUserProfileDocument } from "./firebase/firebase.utils";
 //setting currentUser via redux:
 import { setCurrentUser } from "./redux/user/userActions";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentUser } from "./redux/user/UserSelector";
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -44,6 +48,7 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={Homepage} />
           <Route path="/shop" component={Shop} />
+          <Route exact path="/checkout" component={Checkout} />
           <Route
             exact
             path="/signin"
@@ -58,8 +63,8 @@ class App extends React.Component {
 }
 
 //to disable access to login page:
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
 });
 
 //for user of navigating and setting current user in homepage/login
