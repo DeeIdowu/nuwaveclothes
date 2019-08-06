@@ -1,5 +1,5 @@
 import CartActionTypes from "./CartTypes";
-import { addItemToCart } from "./CartUtils";
+import { addItemToCart, removeItemFromCart } from "./CartUtils";
 
 const INITIAL_STATE = {
   hidden: true, // to hide the cart upon entering webpage
@@ -26,6 +26,11 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         cartItems: state.cartItems.filter(
           cartItem => cartItem.id !== action.payload.id
         ) // using filter method
+      };
+    case CartActionTypes.REMOVE_ITEM:
+      return {
+        ...state,
+        cartItems: removeItemFromCart(state.cartItems, action.payload)
       };
     default:
       return state;
