@@ -5,11 +5,19 @@ import "./collection.scss";
 //to display the items but categorized
 import CollectionItem from "../../collection-item/CollectionItem";
 
-const Collection = () => (
-  <div className="category">
-    <h1>Collection</h1>
-  </div>
-);
+const Collection = ({ collection }) => {
+  const { title, items } = collection;
+  return (
+    <div className="collection-page">
+      <h2 className="title">{title}</h2>
+      <div className="items">
+        {items.map(item => (
+          <CollectionItem key={item.id} item={item} />
+        ))}
+      </div>
+    </div>
+  );
+};
 //grabbing property of component via ownProps
 const mapStateToProps = (state, ownProps) => ({
   collection: selectCollection(ownProps.match.params.collectionId)(state)
