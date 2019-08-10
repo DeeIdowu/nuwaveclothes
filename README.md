@@ -13,3 +13,4 @@ React-Hooks
 Stripe library on the back-end server
 Context API
 GraphQL + Apollo
+Styled components

@@ -49,6 +49,40 @@ export const createdUserProfileDocument = async (userAuth, additonalData) => {
 
 firebase.initializeApp(config);
 
+//new collection to store the store items:
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  //to obtain collection key
+  const collectionRef = firestore.collection(collectionKey);
+  //batch method:
+  const batch = firestore.batch();
+  //loop the objects via forEach method:
+  objectsToAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc();
+    //new id being creating
+    //batch the new id:
+    batch.set(newDocRef, obj);
+  });
+  //to fire batch call:
+  return await batch.commit(); //returns a promise upon succession
+};
+//for new snapshot function to use within Shop.js:
+export const convertCollectionsSnapshotToMap = collections => {
+  const transformedCollections = collections.doc.map(doc => {
+    const { title, items } = doc.data();
+
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items
+    };
+  });
+  console.log(transformedCollections);
+};
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
