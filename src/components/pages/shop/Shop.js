@@ -24,8 +24,9 @@ class Shop extends React.Component {
   componentDidMount() {
     const { updateCollections } = this.props;
     const collectionRef = firestore.collection("collections");
-    //to obtain the data via snapShot method
-    this.unsubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
+
+    //to obtain the data via get method
+    collectionRef.get().then(snapshot => {
       const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
       updateCollections(collectionsMap);
       //state for spinner
