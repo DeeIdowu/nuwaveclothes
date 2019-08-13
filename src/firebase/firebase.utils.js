@@ -70,7 +70,7 @@ export const addCollectionAndDocuments = async (
 };
 //for new snapshot function to use within Shop.js:
 export const convertCollectionsSnapshotToMap = collections => {
-  const transformedCollections = collections.doc.map(doc => {
+  const transformedCollection = collections.docs.map(doc => {
     const { title, items } = doc.data();
 
     return {
@@ -80,7 +80,11 @@ export const convertCollectionsSnapshotToMap = collections => {
       items
     };
   });
-  console.log(transformedCollections);
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
 };
 
 export const auth = firebase.auth();
