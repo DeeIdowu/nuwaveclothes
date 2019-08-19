@@ -5,10 +5,11 @@ import FormInput from "../form-input/FormInput";
 //importing custom button
 import CustomButton from "../custom-buttom/CustomButton";
 import "./signin.scss";
-//use of firebase:
-import { auth } from "../../firebase/firebase.utils";
 //from redux sagas
-import { googleSignInStart } from "../../redux/user/userActions"; //dispatch via connect/map
+import {
+  googleSignInStart,
+  emailSignInStart
+} from "../../redux/user/userActions"; //dispatch via connect/map
 import { connect } from "react-redux";
 
 //stateful due to acquring user input
@@ -24,14 +25,10 @@ class SignIn extends React.Component {
   //submit on form - just as a preventative for misfire of event for now:
   handleSubmit = async event => {
     event.preventDefault();
+    const { emailSignInStart } = this.props;
     const { email, password } = this.state;
 
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      this.setState({ email: "", password: "" });
-    } catch (error) {
-      console.log(error);
-    }
+    emailSignInStart(email, password);
   };
   //for the event of input for email and password field:
   handleChange = event => {
@@ -85,7 +82,9 @@ class SignIn extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  googleSignInStart: () => dispatch(googleSignInStart())
+  googleSignInStart: () => dispatch(googleSignInStart()),
+  emailSignInStart: (email, password) =>
+    dispatch(emailSignInStart({ email, password }))
 });
 
 export default connect(
