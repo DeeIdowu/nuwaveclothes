@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { connect } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
@@ -13,38 +13,27 @@ import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/UserSelector";
 import { checkUserSession } from "./redux/user/userActions";
 
-class App extends React.Component {
-  unsubscribeFromAuth = null;
-
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ checkUserSession, currentUser }) => {
+  useEffect(() => {
     checkUserSession();
-  }
+  }, [checkUserSession]); //to make sure it only checks once
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
-
-  render() {
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path="/" component={Homepage} />
-          <Route path="/shop" component={Shop} />
-          <Route exact path="/checkout" component={Checkout} />
-          <Route
-            exact
-            path="/signin"
-            render={() =>
-              this.props.currentUser ? <Redirect to="/" /> : <SignInSignOut />
-            }
-          />
-        </Switch>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={Homepage} />
+        <Route path="/shop" component={Shop} />
+        <Route exact path="/checkout" component={Checkout} />
+        <Route
+          exact
+          path="/signin"
+          render={() => (currentUser ? <Redirect to="/" /> : <SignInSignOut />)}
+        />
+      </Switch>
+    </div>
+  );
+};
 
 //to disable access to login page:
 const mapStateToProps = createStructuredSelector({
