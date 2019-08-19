@@ -22,10 +22,8 @@ export const fetchCollectionsFailure = errorMessage => ({
 export const fetchCollectionStartAsync = () => {
   return dispatch => {
     const collectionRef = firestore.collection("collections");
-    //once start
     dispatch(fetchCollectionStart());
 
-    //to obtain the data via get method
     collectionRef
       .get()
       .then(snapshot => {
